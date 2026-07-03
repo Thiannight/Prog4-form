@@ -12,17 +12,18 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class RegistrationService {
-    private final UserRepository userRepository;
-    private final CourseRepository courseRepository;
+  private final UserRepository userRepository;
+  private final CourseRepository courseRepository;
 
-    public String register(RegisterRequest registerRequest){
-        User user = userRepository.findById(registerRequest.getUserId()).orElseThrow();
-        Course course = courseRepository.findById(registerRequest.getCourseId()).orElseThrow();
-        if (course.getUsers().contains(user)) {
-            throw new BadRequestException("User already registered");
-        };
-        course.getUsers().add(user);
-        courseRepository.save(course);
-        return user.getEmail();
+  public String register(RegisterRequest registerRequest) {
+    User user = userRepository.findById(registerRequest.getUserId()).orElseThrow();
+    Course course = courseRepository.findById(registerRequest.getCourseId()).orElseThrow();
+    if (course.getUsers().contains(user)) {
+      throw new BadRequestException("User already registered");
     }
+    ;
+    course.getUsers().add(user);
+    courseRepository.save(course);
+    return user.getEmail();
+  }
 }
