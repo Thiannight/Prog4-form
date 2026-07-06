@@ -7,6 +7,7 @@ import static java.util.UUID.randomUUID;
 import com.example.form.PojaGenerated;
 import com.example.form.endpoint.event.EventProducer;
 import com.example.form.endpoint.event.model.DurablyFallibleUuidCreated1;
+import com.example.form.endpoint.event.model.DurablyFallibleUuidCreated2;
 import com.example.form.endpoint.event.model.UuidCreated;
 import com.example.form.repository.DummyUuidRepository;
 import com.example.form.repository.model.DummyUuid;
@@ -34,6 +35,13 @@ public class HealthEventController {
       @RequestParam(defaultValue = "1") int nbEvent,
       @RequestParam(defaultValue = "2") int waitInSeconds) {
     return handleEvent(nbEvent, waitInSeconds, DurablyFallibleUuidCreated1.class);
+  }
+
+  @GetMapping(value = "/health/event2")
+  public List<String> handleEvent2(
+      @RequestParam(defaultValue = "1") int nbEvent,
+      @RequestParam(defaultValue = "2") int waitInSeconds) {
+    return handleEvent(nbEvent, waitInSeconds, DurablyFallibleUuidCreated2.class);
   }
 
   @PostMapping(value = "/health/event/uuids")
@@ -76,6 +84,13 @@ public class HealthEventController {
     if (eventType.equals(DurablyFallibleUuidCreated1.class)) {
       return eventType.cast(
           DurablyFallibleUuidCreated1.builder()
+              .uuidCreated(uuidCreated)
+              .failureRate(failureRate)
+              .waitDurationBeforeConsumingInSeconds(waitInSeconds)
+              .build());
+    } else if (eventType.equals(DurablyFallibleUuidCreated2.class)) {
+      return eventType.cast(
+          DurablyFallibleUuidCreated2.builder()
               .uuidCreated(uuidCreated)
               .failureRate(failureRate)
               .waitDurationBeforeConsumingInSeconds(waitInSeconds)
